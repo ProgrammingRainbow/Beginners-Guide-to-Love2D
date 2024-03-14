@@ -21,6 +21,13 @@ function game:load()
 
     self.sprite = love.graphics.newImage("images/lua-logo.png")
     self.sprite_w, self.sprite_h = self.sprite:getDimensions()
+
+    self.lua = love.audio.newSource("sounds/lua.ogg", "static")
+    self.love = love.audio.newSource("sounds/love.ogg", "static")
+    self.music = love.audio.newSource("music/freesoftwaresong-8bit.ogg", "stream")
+
+    self.music:setLooping(true)
+    self.music:play()
 end
 
 function game:draw()
@@ -34,6 +41,7 @@ function game:rand_color()
     local g = math.random()
     local b = math.random()
     love.graphics.setBackgroundColor(r, g, b, 1)
+    self.lua:clone():play()
 end
 
 function game:update_text()
@@ -41,15 +49,19 @@ function game:update_text()
     self.text_y = self.text_y + self.text_yvel
     if self.text_x < 0 then
         self.text_xvel = self.text_vel
+        self.love:clone():play()
     end
     if self.text_x + self.text_w > love.graphics.getWidth() then
         self.text_xvel = -self.text_vel
+        self.love:clone():play()
     end
     if self.text_y < 0 then
         self.text_yvel = self.text_vel
+        self.love:clone():play()
     end
     if self.text_y + self.text_h > love.graphics.getHeight() then
         self.text_yvel = -self.text_vel
+        self.love:clone():play()
     end
 end
 
@@ -68,11 +80,21 @@ function game:update_sprite()
     end
 end
 
+function game:pause_music()
+    if self.music:isPlaying() then
+        self.music:pause()
+    else
+        self.music:play()
+    end
+end
+
 function love.keypressed(k)
     if k == "escape" then
         love.event.quit()
     elseif k == "space" then
         game:rand_color()
+    elseif k == "m" then
+        game:pause_music()
     end
 end
 

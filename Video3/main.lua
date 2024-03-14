@@ -5,6 +5,10 @@ local game = {
     text_vel = 3,
     text_xvel = 3,
     text_yvel = 3,
+
+    sprite_x = 0,
+    sprite_y = 0,
+    sprite_vel = 5,
 }
 
 function game:load()
@@ -14,11 +18,15 @@ function game:load()
     love.graphics.setFont(game.font)
     self.text_w = self.font:getWidth(game.text)
     self.text_h = self.font:getHeight()
+
+    self.sprite = love.graphics.newImage("images/lua-logo.png")
+    self.sprite_w, self.sprite_h = self.sprite:getDimensions()
 end
 
 function game:draw()
     love.graphics.draw(self.background)
     love.graphics.print(self.text, self.text_x, self.text_y)
+    love.graphics.draw(self.sprite, self.sprite_x, self.sprite_y)
 end
 
 function game:rand_color()
@@ -45,6 +53,21 @@ function game:update_text()
     end
 end
 
+function game:update_sprite()
+    if love.keyboard.isDown("left") then
+        self.sprite_x = self.sprite_x - self.sprite_vel
+    end
+    if love.keyboard.isDown("right") then
+        self.sprite_x = self.sprite_x + self.sprite_vel
+    end
+    if love.keyboard.isDown("up") then
+        self.sprite_y = self.sprite_y - self.sprite_vel
+    end
+    if love.keyboard.isDown("down") then
+        self.sprite_y = self.sprite_y + self.sprite_vel
+    end
+end
+
 function love.keypressed(k)
     if k == "escape" then
         love.event.quit()
@@ -60,6 +83,7 @@ end
 
 function love.update()
     game:update_text()
+    game:update_sprite()
 end
 
 function love.draw()
